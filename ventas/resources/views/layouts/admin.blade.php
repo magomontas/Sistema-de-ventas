@@ -7,6 +7,8 @@
     <title>ADVentas | www.alonso97.com</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="https://kit.fontawesome.com/aa43c96d82.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">

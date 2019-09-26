@@ -64,7 +64,7 @@ class IngresoController extends Controller
             $mytime = Carbon::now('America/El_Salvador');
             $ingreso->fecha_hora = $mytime->toDateString();
             $ingreso->impuesto = '13';
-            $ingreso->estado = 'A';
+            $ingreso->estado = 'Activo';
             $ingreso->save();
 
             $idarticulo = $request->get('idarticulo');
@@ -89,7 +89,7 @@ class IngresoController extends Controller
         } catch (\Exeption $e) {
             DB::rollback();
         }
-        
+
         return redirect()->route('ingreso.index');
     }
 
@@ -101,7 +101,7 @@ class IngresoController extends Controller
         ->select('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado', DB::raw('sum(di.cantidad*precio_compra) as total'))
         ->where('i.idingreso', '=', $id)
         ->groupBy('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado');
-                
+
         $detalles = DB::table('detalle_ingreso as di')
         ->join('articulo as a','di.idarticulo','=','a.idarticulo')
         ->select('a.nombre as articulo','di.cantidad','di.precio_compra','di.precio_venta')
@@ -112,7 +112,7 @@ class IngresoController extends Controller
     }
 
     public function destroy($id)
-    { 
+    {
         $ingreso=Ingreso::findOrFail($id);
         $ingreso->estado='Anulado';
         $ingreso->update();

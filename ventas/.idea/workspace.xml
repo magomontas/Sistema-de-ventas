@@ -14,10 +14,18 @@
       <executable />
     </execution>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectId" id="1RAcnpL7CErsetI3pLWN6ozS9v3" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/ventas/venta" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -29,6 +37,15 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\ventas\resources\views\ventas\venta" />
+      <recent name="C:\xampp\htdocs\ventas\public\img" />
+      <recent name="C:\xampp\htdocs\ventas\public\css" />
+      <recent name="C:\xampp\htdocs\ventas\resources\views\almacen\articulo" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\ventas\resources\views\ventas\venta\img" />
+      <recent name="C:\xampp\htdocs\ventas\resources\views\layouts\vendido" />
+      <recent name="C:\xampp\htdocs\ventas\resources\views" />
+      <recent name="C:\xampp\htdocs\ventas\resources\views\layouts" />
       <recent name="C:\xampp\htdocs\ventas\resources\views\almacen\articulo" />
     </key>
   </component>
@@ -61,6 +78,18 @@
       <workItem from="1569387335168" duration="2444000" />
       <workItem from="1569410207070" duration="1765000" />
       <workItem from="1569451418850" duration="11253000" />
+      <workItem from="1569535379790" duration="6290000" />
+      <workItem from="1569595402538" duration="425000" />
+      <workItem from="1569600568941" duration="8000" />
+      <workItem from="1569603636582" duration="10000" />
+      <workItem from="1569633932038" duration="8367000" />
+      <workItem from="1569712540258" duration="11703000" />
+      <workItem from="1569761411925" duration="3686000" />
+      <workItem from="1569783006175" duration="3948000" />
+      <workItem from="1569971051609" duration="8756000" />
+      <workItem from="1570197087416" duration="4343000" />
+      <workItem from="1570302699683" duration="2524000" />
+      <workItem from="1570314514706" duration="5744000" />
     </task>
     <servers />
   </component>

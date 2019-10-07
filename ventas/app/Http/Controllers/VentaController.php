@@ -4,7 +4,8 @@ namespace sisventas\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Input,
+    PDF;
 use sisventas\Http\Requests\VentaFormRrequest;
 
 use sisventas\Venta;
@@ -22,6 +23,7 @@ class VentaController extends Controller
     {
         $this->middleware('auth');
     }
+
     public function index(Request $request)
     {
         if ($request) {
@@ -29,10 +31,10 @@ class VentaController extends Controller
             $ventas = DB::table('venta as v')
                 ->join('persona as p', 'v.idcliente', '=', 'p.idpersona')
                 ->join('detalle_venta as dv', 'v.idventa', '=', 'dv.idventa')
-                ->select('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto' , 'v.estado', 'v.total_venta')
+                ->select('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto', 'v.estado', 'v.total_venta')
                 ->where('v.num_comprobante', 'LIKE', '%' . $query . '%')
                 ->orderBy('v.idventa', 'DESC')
-                ->groupBy('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto' , 'v.estado','v.total_venta')
+                ->groupBy('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto', 'v.estado', 'v.total_venta')
                 ->paginate(7);
 
             return view('ventas.venta.index', ["ventas" => $ventas, "searchText" => $query]);
@@ -43,11 +45,11 @@ class VentaController extends Controller
     {
         $personas = DB::table('persona')->where('tipo_persona', '=', 'Cliente')->get();
         $articulos = DB::table('articulo as art')
-            ->join('detalle_ingreso as di','art.idarticulo','=','di.idarticulo')
-            ->select(DB::raw('CONCAT(art.codigo, " ",art.nombre) AS articulo'), 'art.idarticulo','art.stock', DB::raw('avg(di.precio_venta) as precio_promedio'))
+            ->join('detalle_ingreso as di', 'art.idarticulo', '=', 'di.idarticulo')
+            ->select(DB::raw('CONCAT(art.codigo, " ",art.nombre) AS articulo'), 'art.idarticulo', 'art.stock', DB::raw('avg(di.precio_venta) as precio_promedio'))
             ->where('art.estado', '=', 'Activo')
-            ->where('art.stock','>','0')
-            ->groupBy('articulo','art.idarticulo','art.stock')
+            ->where('art.stock', '>', '0')
+            ->groupBy('articulo', 'art.idarticulo', 'art.stock')
             ->get();
 
         return view('ventas.venta.create', ["personas" => $personas, "articulos" => $articulos]);
@@ -96,23 +98,6 @@ class VentaController extends Controller
         return redirect()->route('venta.index');
     }
 
-//    public function show($id)
-//    {
-//        $venta = DB::table('venta as v')
-//            ->join('persona as p', 'v.idcliente', '=', 'p.idpersona')
-//            ->join('detalle_venta as dv', 'v.idventa', '=', 'dv.idventa')
-//            ->select('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto' , 'v.estado', 'v.total_venta')
-//            ->where('v.idventa', '=', $id)
-//            ->first();
-//
-//        $detalles = DB::table('detalle_venta as dv')
-//            ->join('articulo as a','dv.idarticulo','=','a.idarticulo')
-//            ->select('a.nombre as articulo','dv.cantidad','dv.descuento','dv.precio_venta')
-//            ->where('dv.idventa','=',$id)
-//            ->get();
-//
-//        return redirect()->route("venta.show", ["venta" => $venta, "detalles" => $detalles]);
-//    }
     public function show($id)
     {
         $venta = Venta::where('idventa', $id)->first();
@@ -128,15 +113,63 @@ class VentaController extends Controller
             ->where('dv.idventa', '=', $id)
             ->get();
 
-        return view('ventas.venta.show', ["venta" => $venta, "detalles"=>$detalles]);
+        return view('ventas.venta.show', ["venta" => $venta, "detalles" => $detalles]);
     }
 
 
     public function destroy($id)
     {
-        $venta=Venta::findOrFail($id);
-        $venta->estado='C';
+        $venta = Venta::findOrFail($id);
+        $venta->estado = 'C';
         $venta->update();
         return redirect()->route('venta.index');
     }
+
+    public function detail($id)
+    {
+        $ventas = Venta::where('idventa', $id)->first();
+        $ventas = DB::table('venta as v')
+            ->join('persona as p', 'v.idcliente', '=', 'p.idpersona')
+            ->join('detalle_venta as dv', 'v.idventa', '=', 'dv.idventa')
+            ->select('v.idventa', 'v.fecha_hora', 'p.nombre', 'v.tipo_comprobante', 'v.serie_comprobante', 'v.num_comprobante', 'v.impuesto', 'v.estado', 'v.total_venta')
+            ->where('v.idventa', '=', $id)
+            ->first();
+        $detalles = DB::table('detalle_venta as dv')
+            ->join('articulo as a', 'dv.idarticulo', '=', 'a.idarticulo')
+            ->select('a.nombre as articulo', 'dv.cantidad', 'dv.descuento', 'dv.precio_venta')
+            ->where('dv.idventa', '=', $id)
+            ->get();
+
+        $pdf = PDF::loadView('ventas.venta.detail', [
+            "venta" => $ventas,
+            "detalles" => $detalles
+        ]);
+        return $pdf->stream();
+    }
+
+    public function totalVentas(Request $request)
+    {
+        if ($request) {
+//            mostrando ventas por dia
+            $vDia = DB::table('venta')
+                ->select('idventa', 'total_venta', 'estado', 'tipo_comprobante')
+                ->whereDate('fecha_hora', '2019-07-19')
+                ->get();
+//            por semana
+
+//            $vSemana = DB::table('venta')
+//                ->select('idventa', 'total_venta', 'estado', 'tipo_comprobante')
+//                ->whereDate('fecha_hora', '10')
+//                ->get();
+////            por mes
+
+            $vMes = DB::table('venta')
+                ->select('idventa', 'total_venta', 'estado', 'tipo_comprobante')
+                ->whereMonth('fecha_hora', '09')
+                ->get();
+
+            return view('ventas.venta.totalventas', ["vDia" => $vDia, "vMes" => $vMes]);
+        }
+    }
+
 }

@@ -8,7 +8,7 @@ use sisventas\Http\Requests\ArticuloFormRequest;
 use sisventas\Articulo;
 use DB;
 use PDF;
-use sisventas\Categoria;
+use sisventas\DetalleVenta;
 use Illuminate\Support\Facades\Storage;
 
 class ArticuloController extends Controller
@@ -34,6 +34,27 @@ class ArticuloController extends Controller
             return view('almacen.articulo.index', ["articulos" => $articulos, "searchText" => $query]);
             // return view('almacen.categoria.index', compact('categorias'));
         }
+    }
+
+    public function masvendido()
+    {
+        $detalles = DB::table('articulo as a')
+            ->join('categoria as c', 'a.idcategoria', '=', 'c.idcategoria')
+            ->select('a.nombre', 'a.imagen', 'c.nombre as categoria', 'a.estado','a.stock')
+            ->where('a.stock','<=', 15)
+            ->where('a.estado','=','Activo')
+            ->orderByRaw('a.idarticulo', 'DESC')
+            ->paginate(3);
+
+        $articulos = DB::table('detalle_venta as dv')
+            ->join('articulo as a', 'dv.idarticulo', '=', 'a.idarticulo')
+            ->select('dv.idarticulo','a.nombre','a.imagen', DB::raw('SUM(dv.cantidad) as TotalVentas'))
+            ->groupBy('dv.idarticulo','a.nombre','a.imagen')
+            ->havingRaw('SUM(dv.cantidad)')
+            ->orderByRaw('dv.cantidad DESC')
+            ->paginate(3);
+        return view('layouts.vendido.home', ["articulos" => $articulos, "detalles" => $detalles]);
+
     }
 
     public function create()

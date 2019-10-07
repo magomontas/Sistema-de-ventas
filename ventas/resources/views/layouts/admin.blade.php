@@ -30,7 +30,7 @@
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="{{ route('alta') }}" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>AD</b>V</span>
                 <!-- logo for regular state and mobile devices -->
@@ -72,7 +72,7 @@
                                             Cerrar
                                         </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        <form id="logout-form" action="{{ route('logout')  }}" method="POST" style="display: none;">
                                             @csrf
                                         </form>
                                         <!-- <a href="{{ route('logout') }}" class="btn btn-default btn-flat">Cerrar</a> -->
@@ -184,6 +184,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <!--Contenido-->
+                                        @yield('first')
                                         @yield('contenido')
                                         <!--Fin Contenido-->
                                     </div>

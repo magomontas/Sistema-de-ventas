@@ -95,12 +95,15 @@ class IngresoController extends Controller
 
     public function show($id)
     {
-        $ingreso = DB::table('ingreso as i')
+        $ingresos = Ingreso::where('idingreso', $id)->first();
+        $ingresos = DB::table('ingreso as i')
         ->join('persona as p', 'i.idproveedor', '=', 'p.idpersona')
         ->join('detalle_ingreso as di', 'i.idingreso', '=', 'di.idingreso')
-        ->select('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado', DB::raw('sum(di.cantidad*precio_compra) as total'))
+        ->select('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado', DB::raw('SUM(di.cantidad*di.precio_compra) as Total '))
         ->where('i.idingreso', '=', $id)
-        ->groupBy('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado');
+        ->groupBy('i.idingreso', 'i.fecha_hora', 'p.nombre', 'i.tipo_comprobante', 'i.serie_comprobante', 'i.num_comprobante', 'i.impuesto' , 'i.estado')
+        ->orderbyRaw('i.idingreso')
+        ->first();
 
         $detalles = DB::table('detalle_ingreso as di')
         ->join('articulo as a','di.idarticulo','=','a.idarticulo')
@@ -108,9 +111,8 @@ class IngresoController extends Controller
         ->where('di.idingreso','=',$id)
         ->get();
 
-        return redirect()->route("ingreso.show", ["ingreso" => $ingreso, "detalles" => $detalles]);
+        return view("compras.ingreso.show", ["ingresos" => $ingresos, "detalles" => $detalles]);
     }
-
     public function destroy($id)
     {
         $ingreso=Ingreso::findOrFail($id);

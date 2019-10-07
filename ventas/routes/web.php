@@ -17,13 +17,17 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-Route::get('/admin', function () {
-    return view('layouts.admin');
-});
+//Route::get('/admin', function () {
+//    return view('layouts.home');
+//});
+Route::get('/admin', 'ArticuloController@masvendido')->name('alta');
+Route::get('/cerrar', 'VentaController@totalVentas')->name('cerrar');
+
 
 Route::resource('almacen/categoria', 'CategoriaController');
 //Imprimir una vista
 Route::get('/alamacen/imprimir/{id}','ArticuloController@detail');
+Route::get('/ventas/imprimir/{id}','VentaController@detail');
 Route::resource('almacen/articulo', 'ArticuloController');
 Route::resource('ventas/cliente', 'ClienteController');
 Route::resource('compras/proveedor', 'ProveedorController');

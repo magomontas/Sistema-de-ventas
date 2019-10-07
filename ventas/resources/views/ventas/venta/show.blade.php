@@ -3,6 +3,7 @@
 @section('contenido')
 
 <div class="row">
+    <a href="{{ URL::action('VentaController@detail',$venta->idventa) }}"><button class="btn btn-success">Imprimir</button></a>
     <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
         <div class="form-group">
             <label for="proveedor">Cliente</label>
@@ -23,7 +24,7 @@
     </div>
     <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4">
         <div class="form-group">
-            <label for="num_comprobante">Nº Comoprobante</label>
+            <label for="num_comprobante">Nº Comprobante</label>
             <p>{{$venta->num_comprobante}}</p>
         </div>
     </div>
